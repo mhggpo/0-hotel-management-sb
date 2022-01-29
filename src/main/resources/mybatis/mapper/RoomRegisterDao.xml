@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.hotelmanagement.dao.RoomRegisterDao">
+
+    <insert id="insertRoomRegister">
+        insert into roomregister
+        values (#{id},#{room},#{deposit},#{guestName},#{guestIdType},#{guestId},#{tel},#{arriveTime},#{leaveTime},#{guestCount},#{memberId})
+    </insert>
+
+    <update id="updateRoomRegister">
+        update roomregister
+        set guestName=#{guestName},guestIdType=#{guestIdType},guestId=#{guestId},tel=#{tel},guestCount=#{guestCount},memberId=#{memberId}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteRoomRegister">
+        delete from roomregister r
+        where r.id=#{roomRegisterId}
+    </delete>
+
+    <select id="selectRoomRegisterById" resultType="RoomRegister">
+        select *
+        from roomregister r
+        where r.id=#{id}
+    </select>
+
+    <select id="selectRoomRegisterByGuestId" resultType="RoomRegister">
+        select *
+        from roomregister r
+        where r.guestId=#{guestId}
+    </select>
+    <select id="selectNextAutoId" resultType="java.lang.Integer">
+        select AUTO_INCREMENT
+        from information_schema.TABLES
+        where TABLE_SCHEMA = 'zerohotel'
+          and TABLE_NAME = 'roomRegister'
+    </select>
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.hotelmanagement.dao.MemberDao">
+    <insert id="insertMember">
+        insert into member
+        values (#{id},#{name},#{sex},#{pwd},#{tel},#{addr},#{email},0,false,null,null,#{remarks})
+    </insert>
+    
+    <delete id="deleteMember">
+        delete from member
+        where id=#{memberId}
+    </delete>
+    
+    <update id="updateMember">
+        update member
+        <set>
+            name=#{name},
+            sex=#{sex},
+            pwd=#{pwd},
+            tel=#{tel},
+            addr=#{addr},
+            email=#{email},
+            remarks=#{remarks},
+            <if test="lastIn!=null">
+                lastIn=#{lastIn},
+            </if>
+            <if test="lastRe!=null">
+                lastRe=#{lastRe},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <select id="selectAllMember" resultType="Member">
+        select *
+        from member
+    </select>
+
+    <select id="selectMemberById" resultType="Member">
+        select *
+        from member m
+        where m.id=#{memberId}
+    </select>
+
+    <select id="selectMembersByName" resultType="com.zero.hotelmanagement.pojo.Member">
+        select *
+        from member m
+        where m.name LIKE CONCAT('%',#{memberName},'%')
+    </select>
+
+    <select id="getMembers" resultType="com.zero.hotelmanagement.pojo.Member">
+        select *
+        from member
+        limit 6 offset #{offset}
+    </select>
+
+    <select id="countAllMembers" resultType="java.lang.Integer">
+    select count(*) from member
+    </select>
+
+</mapper>

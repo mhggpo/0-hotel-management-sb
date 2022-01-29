@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.hotelmanagement.dao.GoodsDao">
+    <insert id="insertGoods">
+        insert into goods
+        values (#{id},#{name},#{typeid},#{price},#{unit},#{remarks})
+    </insert>
+
+    <delete id="deleteGoods">
+        delete from goods g
+        where g.id=#{id}
+    </delete>
+
+    <update id="updateGoods">
+        update goods
+        set name=#{name},typeid=#{typeid},price=#{price},unit=#{unit},remarks=#{remarks}
+        where id=#{id}
+    </update>
+
+    <select id="selectGoodsById" resultType="Goods">
+        select *
+        from goods g
+        where g.typeid=#{id}
+    </select>
+
+    <select id="selectGoodsByType" resultType="Goods">
+        select *
+        from goods g
+        where g.typeid LIKE CONCAT('%',#{type},'%')
+    </select>
+
+    <select id="getGoods" resultType="com.zero.hotelmanagement.pojo.Goods">
+        select * from goods
+        limit 6 offset #{page};
+    </select>
+
+    <select id="countAllGoods" resultType="java.lang.Integer">
+        select count(*) from goods
+    </select>
+</mapper>

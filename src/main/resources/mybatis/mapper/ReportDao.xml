@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.hotelmanagement.dao.ReportDao">
+
+    <select id="selectReserveMember" resultType="java.lang.Integer">
+    select res.id ReserveId,r.id RoomId,r.type RoomType,reg.guestName as GuestName,m.id as MemberId,reg.arriveTime as ArriveTime,reg.leaveTime as LeaveTime,reg.tel as Tel
+    from reserve res join roomregister reg
+    on res.roomRegister=reg.id
+    join room r on reg.room=r.id
+    right outer join member m on reg.guestId=m.id
+    <where>
+        res.reserveDate &lt; #{max} and res.reserveDate &gt; #{min}
+        <if test="roomId!=null">
+            and r.id=#{roomId}
+        </if>
+    </where>
+    </select>
+
+    <select id="selectCheckInMember" resultType="java.lang.Integer">
+        select cki.id CheckInId,r.id RoomId,r.type RoomType,reg.guestName as GuestName,m.id as MemberId,
+        reg.arriveTime as ArriveTime,reg.leaveTime as LeaveTime,reg.tel as Tel
+        from checkin cki join roomregister reg
+        on cki.roomRegister=reg.id
+        join room r on reg.room=r.id
+        right outer join member m on reg.guestId=m.id
+        <where>
+            cki.checkInDate &lt; #{max} and cki.checkInDate &gt; #{min}
+            <if test="roomId!=null">
+                and r.id=#{roomId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectReserveMemberToday" resultType="java.lang.Integer">
+        select res.id ReserveId,r.id RoomId,r.type RoomType,reg.guestName as GuestName,m.id as MemberId,
+        reg.arriveTime as ArriveTime,reg.leaveTime as LeaveTime,reg.tel as Tel
+        from reserve res join roomregister reg
+        on res.roomRegister=reg.id
+        join room r on reg.room=r.id
+        right outer join member m on reg.guestId=m.id
+        <where>
+            res.reserveDate =curdate()
+        </where>
+    </select>
+
+    <select id="selectCheckInMemberToday" resultType="java.lang.Integer">
+        select cki.id CheckInId,r.id RoomId,r.type RoomType,reg.guestName as GuestName,m.id as MemberId,
+        reg.arriveTime as ArriveTime,reg.leaveTime as LeaveTime,reg.tel as Tel
+        from checkin cki join roomregister reg
+        on cki.roomRegister=reg.id
+        join room r on reg.room=r.id
+        right outer join member m on reg.guestId=m.id
+        <where>
+            cki.checkInDate =curdate()
+        </where>
+    </select>
+
+    <select id="selectCheckOutMemberToday" resultType="java.lang.Integer">
+        select cko.id CheckOutId,r.id RoomId,r.type RoomType,reg.guestName as GuestName,m.id as MemberId,
+        reg.arriveTime as ArriveTime,reg.leaveTime as LeaveTime,reg.tel as Tel
+        from checkout cko join checkin cki
+        on cko.checkIn=cki.id
+        join roomregister reg
+        on cki.roomRegister= reg.id
+        join room r on reg.room=r.id
+        right outer join member m on reg.guestId=m.id
+        where date_format(reg.leaveTime,'%y-%m-%d')=curdate()
+    </select>
+</mapper>

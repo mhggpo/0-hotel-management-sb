@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.hotelmanagement.dao.CostDao">
+    <select id="selectGoodsById" resultType="com.zero.hotelmanagement.pojo.Goods">
+        select * from goods
+        where id=#{goodsId}
+    </select>
+
+    <insert id="insertCost">
+        insert into cost
+        values (#{id},#{checkIn},#{price},#{discount},#{discountPrice},#{totalPrice},#{user},#{time},#{remarks})
+    </insert>
+
+    <update id="updateCost">
+        update cost
+        set checkIn=#{checkIn},price=#{price},discount=#{discount},discountPrice=#{discountPrice},totalPrice=#{totalPrice},user=#{user},time=#{time},remarks=#{remarks}
+        where id=#{id}
+    </update>
+    <delete id="deleteCost">
+        delete from cost
+        where id=#{costId}
+    </delete>
+
+    <select id="selectGoodsByName" resultType="com.zero.hotelmanagement.pojo.Goods">
+        select * from goods
+        where name  LIKE CONCAT('%',#{goodsTypeName},'%')
+    </select>
+
+    <select id="selectCostByRoomId" resultType="com.zero.hotelmanagement.pojo.Cost">
+        select *
+        from cost inner join checkin
+            on cost.checkIn=checkin.id
+        inner join roomregister on checkin.roomRegister=roomregister.id
+        where roomRegister.room=#{roomId}
+    </select>
+
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.hotelmanagement.dao.UserDao">
+    <insert id="insertUser">
+        insert into user
+        values (#{id},#{uname},#{pwd},#{power},#{remarks})
+    </insert>
+
+    <delete id="deleteUser">
+        delete from user
+        where user.id=#{userId}
+    </delete>
+
+    <update id="updateUser">
+        update user u
+        set u.uname=#{uname},u.pwd=#{pwd},u.power=#{power},u.remarks=#{remarks}
+        where u.id=#{id}
+    </update>
+
+    <select id="selectUserById" resultType="User">
+        select *
+        from user u
+        where u.id=#{userId}
+    </select>
+
+    <select id="selectUserByName" resultType="User">
+        select *
+        from user u
+        where u.uname like CONCAT('%',#{userName},'%')
+    </select>
+
+    <select id="getUser" resultType="com.zero.hotelmanagement.pojo.User">
+        select * from user
+        limit 6 offset #{page};
+    </select>
+
+    <select id="countAllUsers" resultType="java.lang.Integer">
+        select count(*) from user
+    </select>
+</mapper>

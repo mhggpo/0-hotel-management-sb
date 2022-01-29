@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.hotelmanagement.dao.ReserveDao">
+
+
+    <insert id="insertReserve">
+        insert into reserve
+        values (#{id},#{roomRegister},#{user},#{remarks},#{status},#{reserveDate})
+    </insert>
+
+    <update id="UpdateReserve">
+        update reserve
+        set roomRegister=#{roomRegister},user=#{user},remarks=#{remarks},status=#{status},reserveDate=#{reserveDate}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteReserve">
+        update reserve
+        set status='已取消'
+        where id = #{reserveId};
+        update room
+        set status='空房'
+        where id=(
+            select room
+            from roomregister
+            where id = (select roomregister from reserve where id = #{reserveId})
+        );
+    </delete>
+
+    <select id="selectReserveById" resultType="Reserve">
+        select *
+        from reserve r
+        where r.id=#{reserveId}
+    </select>
+
+    <select id="selectReserveByType" resultType="Reserve">
+        select *
+        from reserve join roomregister on reserve.roomRegister=roomregister.id
+            join room on roomRegister.room=room.id
+        where room.type LIKE CONCAT('%',#{roomType},'%')
+    </select>
+
+    <select id="selectReserveByFloor" resultType="Reserve">
+        select *
+        from reserve join roomregister on reserve.roomRegister=roomregister.id
+            join room on roomRegister.room=room.id
+        where room.floor LIKE CONCAT('%',#{floor},'%')
+    </select>
+
+    <select id="selectReserveByStatus" resultType="Reserve">
+        select *
+        from reserve
+        where reserve.status LIKE CONCAT('%',#{reserveStatus},'%')
+    </select>
+
+    <select id="selectReserveByName" resultType="Reserve">
+        select *
+        from reserve join roomregister on reserve.roomRegister=roomregister.id
+        where roomregister.guestName LIKE CONCAT('%',#{reserveGuestName},'%')
+    </select>
+
+    <select id="getReserve" resultType="com.zero.hotelmanagement.pojo.Reserve">
+        select * from reserve
+        limit 6 offset #{page};
+    </select>
+
+    <select id="countAllReserves" resultType="java.lang.Integer">
+        select count(*) from reserve
+    </select>
+
+    <select id="selectReserveByRoomId" resultType="com.zero.hotelmanagement.pojo.Reserve">
+        select *
+        from reserve r,roomregister rg,room ro
+        where r.roomRegister=rg.id and rg.room=ro.id and ro.id=#{roomId}
+    </select>
+</mapper>

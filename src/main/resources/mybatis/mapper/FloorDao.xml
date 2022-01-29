@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.hotelmanagement.dao.FloorDao">
+    <insert id="insertFloor">
+        insert into floor
+        values (#{name},#{remarks})
+    </insert>
+
+    <delete id="deleteFloor">
+        delete from floor f
+        where f.name=#{name}
+    </delete>
+
+    <update id="updateFloor">
+        update floor f
+        <set>
+            <if test="floor.remarks!=null and floor.remarks neq ''">
+                f.remarks=#{floor.remarks},
+            </if>
+            <if test="floor.name!=null and floor.name neq ''">
+                f.name=#{floor.name},
+            </if>
+        </set>
+        where f.name=#{target}
+    </update>
+
+    <select id="selectFloor" resultType="Floor">
+        select *
+        from floor f
+        where f.name LIKE CONCAT('%',#{name},'%')
+    </select>
+
+    <select id="getFloor" resultType="com.zero.hotelmanagement.pojo.Floor">
+        select * from floor
+        limit 6 offset #{page};
+    </select>
+
+    <select id="countAllFloors" resultType="java.lang.Integer">
+        select count(*) from floor
+    </select>
+</mapper>

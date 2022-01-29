@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.hotelmanagement.dao.GoodsTypeDao">
+    <insert id="insertGoodsType">
+        insert into goodstype
+        values (#{id},#{name},#{remarks})
+    </insert>
+
+    <delete id="deleteGoodsType">
+        delete from goodstype g
+        where #{goodsTypeId}=g.id
+    </delete>
+
+    <update id="updateGoodsType">
+        update goodstype g
+        set name=#{name},remarks=#{remarks}
+        where id=#{id}
+    </update>
+
+    <select id="selectAllGoodsType" resultType="GoodsType">
+        select *
+        from goodstype
+    </select>
+
+    <select id="countAllGoodsTypes" resultType="java.lang.Integer">
+        select count(*) from goodstype
+    </select>
+
+    <select id="getGoodsType" resultType="com.zero.hotelmanagement.pojo.GoodsType">
+        select *
+        from goodstype
+        limit 6 offset #{offset}
+    </select>
+
+    <select id="selectGoodsTypeByName" resultType="com.zero.hotelmanagement.pojo.GoodsType">
+        select  * from goodstype
+        where name=#{name}
+    </select>
+    <select id="selectGoodsTypeById" resultType="com.zero.hotelmanagement.pojo.GoodsType">
+        select *
+        from goodstype
+        where id=#{id}
+    </select>
+</mapper>

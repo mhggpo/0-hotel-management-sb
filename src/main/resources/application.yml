@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.2.101:3306/zerohotel?useSSL=true&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: root
+    password: root
+mybatis:
+  type-aliases-package: com.zero.hotelmanagement.pojo
+  mapper-locations: classpath*:mybatis/mapper/*.xml

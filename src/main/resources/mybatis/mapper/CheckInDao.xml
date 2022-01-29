@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.hotelmanagement.dao.CheckInDao">
+    <delete id="delCheckIn">
+        update room
+        set status='空房'
+        where id=#{roomId};
+        delete from reserve
+        where roomRegister=(select checkIn.roomRegister from checkin where checkin.id=#{checkInId});
+        insert into guesthistory
+        set
+            name=(select guestName from roomRegister where id=(select checkIn.roomRegister from checkin where checkin.id=#{checkInId})),
+            guestIdType=(select guestIdType from roomRegister where id=(select checkIn.roomRegister from checkin where checkin.id=#{checkInId})),
+            guestId=(select guestId from roomRegister where id=(select checkIn.roomRegister from checkin where checkin.id=#{checkInId})),
+            tel=(select tel from roomRegister where id=(select checkIn.roomRegister from checkin where checkin.id=#{checkInId}));
+        delete from roomRegister
+        where id=(select checkIn.roomRegister from checkin where checkin.id=#{checkInId});
+        delete from checkin
+        where id=#{checkInId};
+    </delete>
+
+    <select id="selectRoomById" resultType="com.zero.hotelmanagement.pojo.Room">
+        select *
+        from room
+        where room.id=#{roomId}
+    </select>
+
+    <select id="selectRoomByType" resultType="com.zero.hotelmanagement.pojo.Room">
+        select *
+        from room join roomtype on room.type=roomtype.name
+        where roomtype.name LIKE CONCAT('%',#{roomType},'%')
+    </select>
+
+    <select id="selectRoomByStatus" resultType="com.zero.hotelmanagement.pojo.Room">
+        select *
+        from room
+        where room.status LIKE CONCAT('%',#{roomStatus},'%')
+    </select>
+
+    <select id="selectRoomByFloor" resultType="com.zero.hotelmanagement.pojo.Room">
+        select *
+        from room
+        where room.floor LIKE CONCAT('%',#{floor},'%')
+    </select>
+
+    <select id="selectRoomByPrice" resultType="com.zero.hotelmanagement.pojo.Room">
+        <bind name="rp" value="'%' + roomPrice + '%'" />
+        select * from room r
+        <where>
+            <if test="roomPrice!=null">
+                or r.standardPrice like #{rp} or r.vipPrice like #{rp} or r.memberPrice like #{rp} or r.discountPrice like #{rp}
+            </if>
+            <if test="roomPrice=null">
+                1=0
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertCheckIn">
+        insert into checkin
+        values (#{id},#{user},#{roomRegister},#{remarks},#{provideBreakfast},#{provideClock},#{preRoomID},#{checkInDate});
+        update reserve
+        set `status`='已入住'
+        where roomRegister=#{roomRegister};
+        update room
+        set `status`='入住'
+        where id=(select room from roomRegister where id=#{roomRegister});
+    </insert>
+
+    <select id="selectCheckInById" resultType="com.zero.hotelmanagement.pojo.CheckIn">
+        select *
+        from checkin
+        where checkin.id=#{checkInId}
+    </select>
+
+    <select id="selectCheckInByRoomType" resultType="com.zero.hotelmanagement.pojo.CheckIn">
+        select *
+        from checkin join roomregister on checkin.roomRegister=roomregister.id
+        join room on roomregister.room=room.id
+        where room.type LIKE CONCAT('%',#{roomType},'%')
+    </select>
+
+    <select id="selectCheckInByRoomId" resultType="com.zero.hotelmanagement.pojo.CheckIn">
+        select *
+        from checkin join roomregister on checkin.roomRegister=roomregister.id
+        where roomregister.room=#{roomId}
+    </select>
+
+    <select id="selectCheckInByUser" resultType="com.zero.hotelmanagement.pojo.CheckIn">
+        select *
+        from checkin join roomregister on checkin.roomRegister=roomregister.id
+        where roomregister.guestName=#{guest}
+    </select>
+
+    <select id="selectCheckInByGuestId" resultType="com.zero.hotelmanagement.pojo.CheckIn">
+        select *
+        from checkin join roomregister on checkin.roomRegister=roomregister.id
+        where roomregister.guestId=#{id}
+    </select>
+
+    <select id="selectCheckInByRoomRegister" resultType="com.zero.hotelmanagement.pojo.CheckIn">
+        select *
+        from checkin c
+        where c.roomRegister=#{id}
+    </select>
+
+    <select id="getCheckIn" resultType="com.zero.hotelmanagement.pojo.CheckIn">
+        select * from checkin
+        limit 6 offset #{page};
+    </select>
+
+    <select id="countAllCheckIn" resultType="java.lang.Integer">
+        select count(*) from checkin
+    </select>
+
+    <update id="changeRoom">
+        update checkin
+        set preRoomID=(select room from(select roomregister.room from checkin join roomregister on checkin.roomRegister=roomregister.id where checkin.id=#{checkInId})as temp)
+        where id=#{checkInId};
+        update roomregister
+        set room=#{roomId}
+        where id=(select checkIn.roomRegister from checkin where checkin.id=#{checkInId});
+        update room
+        set `status`='空房'
+        where id=(select preRoomID from checkin where checkin.id=#{checkInId});
+        update room
+        set `status`='入住'
+        where id=#{roomId};
+    </update>
+
+</mapper>

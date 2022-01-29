@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.hotelmanagement.dao.RoomTypeDao">
+    <insert id="insertRoomType">
+        insert into roomtype
+        values (#{name},#{capacity},#{remarks})
+    </insert>
+
+    <delete id="deleteRoomType">
+        delete from roomtype
+        where roomtype.name=#{roomTypeName}
+    </delete>
+
+    <update id="updateRoomType">
+        update roomtype
+        set capacity=#{capacity},remarks=#{remarks}
+        where name=#{name}
+    </update>
+
+    <select id="selectAllRoomType" resultType="RoomType">
+        select *
+        from roomtype
+    </select>
+
+    <select id="selectRoomType" resultType="RoomType">
+        select *
+        from roomtype r
+        where r.name LIKE CONCAT('%',#{name},'%')
+    </select>
+
+    <select id="getRoomType" resultType="com.zero.hotelmanagement.pojo.RoomType">
+        select * from roomtype
+        limit 6 offset #{page};
+    </select>
+
+    <select id="countAllRoomTypes" resultType="java.lang.Integer">
+        select count(*) from roomtype
+    </select>
+</mapper>
