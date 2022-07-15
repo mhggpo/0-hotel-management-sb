@@ -1,9 +1,11 @@
+server:
+  port: ${WEB_PORT:8080}
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.2.101:3306/zerohotel?useSSL=true&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&allowMultiQueries=true
-    username: root
-    password: root
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/zerohotel?useSSL=true&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:123456}
 mybatis:
   type-aliases-package: com.zero.hotelmanagement.pojo
   mapper-locations: classpath*:mybatis/mapper/*.xml
