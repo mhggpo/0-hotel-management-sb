@@ -14,11 +14,6 @@ pipeline {
 		DOCKERHUB_CREDENTIALS=credentials('docker-hub-mhggpo')
 	}
     stages {
-        stage('Build') { 
-            steps {
-                sh 'mvn -B -DskipTests clean package docker:build' 
-            }
-        }
         stage('Login') {
 			steps {
 				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
