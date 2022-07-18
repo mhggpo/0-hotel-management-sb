@@ -16,13 +16,6 @@ pipeline {
             }
         }
         stage('Login') {
-			agent {
-				docker {
-					image 'docker:dind' 
-					args '--privileged -v /var/run/docker.sock:/var/run/docker.sock' 
-					reuseNode true
-				}
-			}
 			steps {
 				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 			}
