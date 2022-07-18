@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'maven:3.8-openjdk-8' 
+            image 'registry.cn-hangzhou.aliyuncs.com/acs/maven' 
             args '-v /root/.m2:/root/.m2' 
         }
     }
