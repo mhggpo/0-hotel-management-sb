@@ -5,6 +5,9 @@ pipeline {
             args '-v /root/.m2:/root/.m2' 
         }
     }
+	environment {
+		DOCKERHUB_CREDENTIALS=credentials('docker-hub-mhggpo')
+	}
     stages {
         stage('Build') { 
             steps {
@@ -17,5 +20,20 @@ pipeline {
                 sh './deliver.sh'
             }
         }
+        stage('Login') {
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+		}
+        stage('Push') {
+			steps {
+				sh 'docker push mhggpo/hotelmanagement:latest'
+			}
+		}
     }
+	post {
+		always {
+			sh 'docker logout'
+		}
+	}
 }
