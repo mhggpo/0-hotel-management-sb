@@ -17,18 +17,18 @@ pipeline {
         }
         stage('Login') {
 			steps {
-				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | /usr/local/bin/docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 			}
 		}
         stage('Push') {
 			steps {
-				sh 'docker push mhggpo/hotelmanagement:latest'
+				sh '/usr/local/bin/docker push mhggpo/hotelmanagement:latest'
 			}
 		}
     }
 	post {
 		always {
-			sh 'docker logout'
+			sh '/usr/local/bin/docker logout'
 		}
 	}
 }
