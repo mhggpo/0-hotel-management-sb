@@ -12,13 +12,7 @@ pipeline {
     stages {
         stage('Build') { 
             steps {
-                sh 'mvn -B -DskipTests clean package' 
-            }
-        }
-        stage('Deliver') {
-            steps {
-				sh "chmod +x -R ${env.WORKSPACE}"
-                sh './deliver.sh'
+                sh 'mvn -B -DskipTests clean package docker:build' 
             }
         }
         stage('Login') {
