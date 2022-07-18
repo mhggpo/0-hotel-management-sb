@@ -19,7 +19,7 @@ pipeline {
 				docker {
 					image 'docker:dind' 
 					args '--privileged -v /var/run/docker.sock:/var/run/docker.sock' 
-					reusenode true
+					reuseNode true
 				}
 			}
 			steps {
