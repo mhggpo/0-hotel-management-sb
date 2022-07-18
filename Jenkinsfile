@@ -3,6 +3,7 @@ pipeline {
         docker {
             image 'registry.cn-hangzhou.aliyuncs.com/acs/maven' 
             args '-v /root/.m2:/root/.m2' 
+            reuseNode true
         }
     }
 	environment {
