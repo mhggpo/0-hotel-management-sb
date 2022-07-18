@@ -16,13 +16,18 @@ pipeline {
             }
         }
         stage('Login') {
+            agent {
+				docker {
+					image 'docker:dind' 
+					args '--privileged -v /var/run/docker.sock:/var/run/docker.sock' 
+			}
 			steps {
-				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | /usr/local/bin/docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 			}
 		}
         stage('Push') {
 			steps {
-				sh '/usr/local/bin/docker push mhggpo/hotelmanagement:latest'
+				sh 'docker push mhggpo/hotelmanagement:latest'
 			}
 		}
     }
