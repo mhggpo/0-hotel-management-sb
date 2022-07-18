@@ -3,6 +3,8 @@ pipeline {
         docker {
 			image 'docker:dind' 
 			args '--privileged -v /var/run/docker.sock:/var/run/docker.sock' 
+			image 'registry.cn-hangzhou.aliyuncs.com/acs/maven' 
+            args '-v /home/.m2:/root/.m2' 
 		}
     }
 	environment {
