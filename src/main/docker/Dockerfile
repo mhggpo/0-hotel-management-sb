@@ -7,9 +7,13 @@ RUN java -Djarmode=layertools -jar application.jar extract
 FROM openjdk:8-jre-alpine
 WORKDIR application
 COPY --from=builder application/dependencies/ ./
+RUN true
 COPY --from=builder application/spring-boot-loader/ ./
+RUN true
 COPY --from=builder application/snapshot-dependencies/ ./
+RUN true
 COPY --from=builder application/application/ ./
+RUN true
 ENV TZ="Asia/Shanghai"
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 ENV JVM_OPTS=""
